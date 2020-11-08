@@ -98,6 +98,13 @@ class Game(tk.Tk):
             return True
         return False
 
+    def check_board(self, *args):
+        for i in self.cells:
+            for j in i:
+                if j['text'] == " ":
+                    return False
+        return True
+
     def profile(self, *args):
         try:
             f = open("setting.txt", "r")
@@ -241,6 +248,27 @@ class square(tk.Label):
                     self.master.master.tcp.close_game()
                     print('server closed')
                     return
+                elif self.master.master.check_board():
+                    """
+                    self.master.master.end=time.strftime('%c')
+                    f=open('score.txt','a')
+                    f.write(self.master.master.start+'\t'+
+                            self.master.master.end+'\n')
+                    self.master.master.start_new_game()
+                    """
+                    print('Draw game '.
+                          format(self.master.master.player))
+                    tkinter.messagebox.showinfo(message='Draw game')
+
+                    # time.sleep(5)
+                    self.master.master.Status = False
+                    self.master.master.Menu()
+                    # if self.master.master.tcp.operation == "server":
+                    #     self.master.master.tcp.close_game()
+                    #    print('server closed')
+                    self.master.master.tcp.close_game()
+                    print('server closed')
+                    return
                 else:
                     new_mouve = self.master.master.tcp.opponent.recv(1024)
                     new_mouve = new_mouve.decode('utf-8').split(',')
@@ -258,6 +286,13 @@ class square(tk.Label):
                         print('You Lost the game')
                         tkinter.messagebox.showinfo(message='you Lost the game')
                         # time.sleep(5)
+                        self.master.master.Status = False
+                        self.master.master.Menu()
+                        self.master.master.tcp.close_game()
+                        print('server closed')
+                    elif self.master.master.check_board():
+                        print('Draw Game')
+                        tkinter.messagebox.showinfo(message='Draw Game')
                         self.master.master.Status = False
                         self.master.master.Menu()
                         self.master.master.tcp.close_game()
